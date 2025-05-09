@@ -1,7 +1,31 @@
-import React from 'react'
+import Navbar from '../components/Navbar'
+import Sidebar from '../components/Sidebar'
+import './Dashboard.css';
 
-export default function Dashboard() {
-  return (
-    <div>Dashboard</div>
-  )
+function Dashboard() {
+
+
+    return (
+        <div className="app-layout">
+
+            <Navbar />
+
+
+            <div className="main-content">
+                
+                <>
+                    <Sidebar />
+                </>
+                
+                <div className="page-content">
+                    <div>
+                        Content
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    );
 }
+
+export default Dashboard;

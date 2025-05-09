@@ -84,7 +84,7 @@ export default function LandingPage() {
           StoreIT offers a cutting-edge, intuitive platform to manage your stock, track sales, and gain actionable insights with powerful data visualization.
         </p>
         <a
-          href="/client/src/pages/Dashboard.jsx"
+          href="./Dashboard"
           className="button hero-cta-button animate-fade-in-up animation-delay-600"
         >
           Discover the Future of Inventory
