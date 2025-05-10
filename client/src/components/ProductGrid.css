@@ -1,5 +1,6 @@
 .product-grid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   padding: 20px;
@@ -8,8 +9,8 @@
 .product-card {
   background-color: #fff;
   border: 1px solid #ddd;
-  height: 180px;
-  width: 15em;
+  height: 25vh;
+  width: 20vw;
   display: flex;
   align-items: center;
   justify-content: center;

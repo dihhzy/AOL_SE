@@ -16,7 +16,7 @@ const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed }) => (
 
 const Sidebar = ({ isCollapsed }) => {
     const menuItems = [
-        { icon: <FaHome />, label: 'Ecommerce', isActive: true, hasSubmenu: false },
+        { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false },
         { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: true },
         { icon: <FaLayerGroup />, label: 'Category', hasSubmenu: true },
         { icon: <FaUsers />, label: 'Users', hasSubmenu: true },

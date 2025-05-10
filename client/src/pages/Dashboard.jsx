@@ -14,10 +14,7 @@ function Dashboard() {
         </>
 
         <div className="page-content">
-          <div>Content</div>
-          <div className="page-content">
-            <ProductGrid itemCount={50} />{" "}
-          </div>
+            <ProductGrid itemCount={8} />{" "}
         </div>
       </div>
     </div>
