@@ -1,19 +1,45 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Navbar.css';
 
 import {
-    FaSearch, FaGlobe, FaBell, FaRegCommentDots, FaExpandAlt, FaTh, FaAngleLeft, FaAngleRight
+    FaSearch, FaBell
 } from 'react-icons/fa';
 
+import { useAtom, useSetAtom } from 'jotai';
+
+import { userAtom } from '../lib/userAtom';
+
+
+
 const Navbar = () => {
+    const [user] = useAtom(userAtom);
+    const setUser = useSetAtom(userAtom); // ✅ tambahkan ini
     const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        fetch('/api/me')
+            .then((res) => res.json())
+            .then((data) => {
+                if (data) {
+                    console.log("data", data)
+                    setUser(data); // ✅ set hasil API ke Jotai
+                } else {
+                    console.log('User tidak login', data);
+                }
+            })
+            .catch((err) => {
+                console.error('Gagal ambil user:', err);
+            });
+    }, []);
+
+
 
     return (
         <nav className="dashboard-navbar">
             <div className="navbar-left">
                 <div className="navbar-header">
-                <h1 className="navbar-logo">StoreIT</h1>
+                    <h1 className="navbar-logo">StoreIT</h1>
                 </div>
                 <div className="navbar-search-container">
                     <FaSearch className="search-icon" />
@@ -30,18 +56,21 @@ const Navbar = () => {
             <div className="navbar-right">
                 <button className="icon-btn notification-btn">
                     <FaBell />
-                    <span className="notification-badge">1</span> {/* Dynamic count */}
+                    <span className="notification-badge">1</span>
                 </button>
 
                 <div className="navbar-user-profile">
                     <img
-                        src="" // Replace with actual user image URL
+                        // src="/default-avatar.png" // Optional: pakai default image atau ambil dari DB nanti
                         alt="User Avatar"
                         className="user-avatar"
                     />
                     <div className="user-info">
-                        <span className="user-name">Dave Justin</span>
-                        <span className="user-role">Warga RT7</span>
+                        <span className="user-name">
+                            {user ? user.user.username : 'Loading...'}
+                        </span>
+                        <span className="user-role">
+                            {user ? user.user.role : 'Loading...'}</span>
                     </div>
                 </div>
             </div>

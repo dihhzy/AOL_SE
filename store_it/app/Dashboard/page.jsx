@@ -5,8 +5,11 @@ import Sidebar from "../components/Sidebar";
 import ProductGrid from "../components/ProductGrid";
 import "./Dashboard.css";
 import '../global.css';
+
+
 function Dashboard() {
   return (
+    
     <div className="app-layout">
       <Navbar />
 

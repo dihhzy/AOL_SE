@@ -1,5 +1,6 @@
-import mysql from 'mysql2/promise';
 import { NextResponse } from 'next/server';
+import mysql from 'mysql2/promise';
+import { cookies } from 'next/headers';
 
 export async function POST(request) {
   const { email, password } = await request.json();
@@ -12,15 +13,32 @@ export async function POST(request) {
     const conn = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
-      password: '', // ganti kalau kamu pakai password di XAMPP
-      database: 'store_it' // sesuaikan nama DB
+      password: '',
+      database: 'store_it'
     });
 
-    // Cek apakah user sudah ada
-    const [rows] = await conn.execute('SELECT * FROM users WHERE Email = ? AND Password = ?', [email, password]);
+    const [rows] = await conn.execute(
+      'SELECT * FROM users WHERE Email = ? AND Password = ?',
+      [email, password]
+    );
 
     if (rows.length > 0) {
-      return NextResponse.json({ message: 'Login berhasil', user: rows[0] }, { status: 200 });
+      const user = rows[0];
+
+      const cookieStore = await cookies(); // ✅ tambahkan await
+      console.log(cookieStore)
+      cookieStore.set('session_user', JSON.stringify({
+        id: user.UserID,
+        username: user.Username,
+        role: user.Role,
+        companyId: user.CompanyID
+      }), {
+        path: '/',
+        maxAge: 60 * 60 * 24,
+        httpOnly: false // agar bisa diakses di client-side fetch
+      });
+
+      return NextResponse.json({ message: 'Login berhasil', user }, { status: 200 });
     } else {
       return NextResponse.json({ message: 'Email atau password salah' }, { status: 401 });
     }

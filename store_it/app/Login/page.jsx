@@ -2,33 +2,31 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
 import "../global.css";
+import { useRouter } from "next/navigation";
+import { useAtom } from 'jotai';
+import { userAtom } from '../lib/userAtom';
 
 const LoginPage = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [user, setUser] = useAtom(userAtom);
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    const res = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    const data = await res.json();
 
-      const data = await res.json();
-      if (res.ok) {
-        alert("Login sukses!");
-        console.log("User login:", data.user);
-        // Redirect atau set session di sini
-        window.location.href = "/Dashboard";
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      console.error("Login gagal:", err);
-      alert("Terjadi kesalahan saat login.");
+    if (res.ok) {
+      setUser(data.user); // ✅ simpan user ke Jotai
+      router.push("/Dashboard"); // ✅ redirect ke Dashboard
+    } else {
+      alert(data.message);
     }
   };
 

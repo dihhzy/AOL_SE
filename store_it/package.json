@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "jotai": "^2.12.4",
     "mysql2": "^3.14.1",
     "next": "15.3.2",
     "react": "^19.0.0",
