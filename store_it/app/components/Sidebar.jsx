@@ -1,5 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
+import { useAtom } from 'jotai';
+import { userAtom } from '../lib/userAtom';
 
 import {
     FaHome, FaPlusSquare, FaLayerGroup, FaTrashAlt, FaShoppingBag,
@@ -15,18 +17,30 @@ const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed }) => (
 );
 
 const Sidebar = ({ isCollapsed }) => {
-    const menuItems = [
+    const [user] = useAtom(userAtom);
+
+    const baseMenuItems = [
         { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false },
         { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: true },
         { icon: <FaLayerGroup />, label: 'Category', hasSubmenu: true },
-        { icon: <FaUsers />, label: 'Users', hasSubmenu: true },
-        { icon: <FaChartBar />, label: 'Report' }, 
-        { icon: <FaCog />, label: 'Setting' },
+        { icon: <FaCog />, label: 'Company' },
     ];
+
+    
+    const managerItems = [
+        { icon: <FaChartBar />, label: 'Company' },
+    ]
+    const adminMenuItems = [
+        { icon: <FaUsers />, label: 'Users', hasSubmenu: true },
+    ];
+    
+    const menuItems =
+        user?.Role === 'Staff' ? [...baseMenuItems] : baseMenuItems;
+        user?.Role === 'Admin' ? [...baseMenuItems, ...adminMenuItems] : baseMenuItems;
+        user?.Role === 'Manager' ? [...managerItems] : baseMenuItems;
 
     return (
         <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-            
             <nav className="sidebar-nav">
                 {menuItems.map((item, index) => (
                     <SidebarItem
@@ -45,5 +59,6 @@ const Sidebar = ({ isCollapsed }) => {
         </div>
     );
 };
+
 
 export default Sidebar;

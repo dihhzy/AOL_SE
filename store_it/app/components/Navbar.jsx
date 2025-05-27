@@ -17,21 +17,21 @@ const Navbar = () => {
     const setUser = useSetAtom(userAtom); // ✅ tambahkan ini
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        fetch('/api/me')
-            .then((res) => res.json())
-            .then((data) => {
-                if (data) {
-                    console.log("data", data)
-                    setUser(data); // ✅ set hasil API ke Jotai
-                } else {
-                    console.log('User tidak login', data);
-                }
-            })
-            .catch((err) => {
-                console.error('Gagal ambil user:', err);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch('/api/me')
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             if (data) {
+    //                 console.log("data", data)
+    //                 setUser(data); // ✅ set hasil API ke Jotai
+    //             } else {
+    //                 console.log('User tidak login', data);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.error('Gagal ambil user:', err);
+    //         });
+    // }, []);
 
 
 
@@ -65,12 +65,14 @@ const Navbar = () => {
                         alt="User Avatar"
                         className="user-avatar"
                     />
+                    {console.log(user)}
                     <div className="user-info">
                         <span className="user-name">
-                            {user ? user.user.username : 'Loading...'}
+                            {user ? user.Username : 'Loading...'}
                         </span>
                         <span className="user-role">
-                            {user ? user.user.role : 'Loading...'}</span>
+                            {user ? user.Role : ''}
+                        </span>
                     </div>
                 </div>
             </div>
