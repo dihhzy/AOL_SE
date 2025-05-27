@@ -9,38 +9,40 @@ import {
     FaUsers, FaGlobeAmericas, FaChartBar, FaCog, FaQuestionCircle, FaSignOutAlt, FaAngleRight
 } from 'react-icons/fa';
 
-const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed }) => (
-    <a href="#" className={`sidebar-item ${isActive ? 'active' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed, onClick }) => (
+    <div onClick={onClick} className={`sidebar-item ${isActive ? 'active' : ''} ${isCollapsed ? 'collapsed' : ''}`} style={{ cursor: 'pointer' }}>
         <div className="sidebar-item-icon">{icon}</div>
         {!isCollapsed && <span className="sidebar-item-label">{label}</span>}
         {!isCollapsed && hasSubmenu && <FaAngleRight className="submenu-arrow" />}
-    </a>
+    </div>
 );
+
 
 
 const Sidebar = ({ isCollapsed }) => {
     const router = useRouter();
     const [user, setUser] = useAtom(userAtom);
+
     const handleLogout = () => {
-    setUser(null);   // reset user state di Jotai
-    router.push('/Login'); // redirect ke halaman login
+        setUser(null);
+        router.push('/Login');
     };
 
     const baseMenuItems = [
-        { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false },
-        { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: true },
-        { icon: <FaLayerGroup />, label: 'Category', hasSubmenu: true },
-        { icon: <FaCog />, label: 'Company' },
+        { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false, to: '/' },
+        { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: true, to: '/Product' },
+        { icon: <FaLayerGroup />, label: 'Category', hasSubmenu: true, to: '/Category' },
+        { icon: <FaCog />, label: 'Company', to: '/Company' },
     ];
 
-    
     const managerItems = [
-        { icon: <FaChartBar />, label: 'Company' },
-    ]
-    const adminMenuItems = [
-        { icon: <FaUsers />, label: 'Users', hasSubmenu: true },
+        { icon: <FaChartBar />, label: 'Company', to: '/CompanyReport' },
     ];
-    
+
+    const adminMenuItems = [
+        { icon: <FaUsers />, label: 'Users', hasSubmenu: true, to: '/ShowAllUsers' },
+    ];
+
     let menuItems;
 
     if (user?.Role === 'admin') {
@@ -50,9 +52,8 @@ const Sidebar = ({ isCollapsed }) => {
     } else if (user?.Role === 'staff') {
         menuItems = [...baseMenuItems];
     } else {
-        menuItems = [...baseMenuItems]; // fallback
+        menuItems = [...baseMenuItems];
     }
-
 
     return (
         <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
@@ -65,18 +66,26 @@ const Sidebar = ({ isCollapsed }) => {
                         isActive={item.isActive}
                         hasSubmenu={item.hasSubmenu}
                         isCollapsed={isCollapsed}
+                        onClick={() => {
+                            if (item.to) {
+                                router.push(item.to);
+                            }
+                        }}
                     />
                 ))}
             </nav>
             <div className="sidebar-footer">
-                <a onClick={handleLogout} className={`sidebar-item ${isCollapsed ? 'collapsed' : ''}`} style={{cursor: 'pointer'}}>
-                <div className="sidebar-item-icon"><FaSignOutAlt /></div>
-                {!isCollapsed && <span className="sidebar-item-label">Log Out</span>}
-                    </a>
+                <div
+                    onClick={handleLogout}
+                    className={`sidebar-item ${isCollapsed ? 'collapsed' : ''}`}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <div className="sidebar-item-icon"><FaSignOutAlt /></div>
+                    {!isCollapsed && <span className="sidebar-item-label">Log Out</span>}
                 </div>
             </div>
+        </div>
     );
 };
-
 
 export default Sidebar;
