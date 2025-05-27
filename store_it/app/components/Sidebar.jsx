@@ -23,7 +23,7 @@ const Sidebar = ({ isCollapsed }) => {
     const [user, setUser] = useAtom(userAtom);
     const handleLogout = () => {
     setUser(null);   // reset user state di Jotai
-    router.push('/LoginPage'); // redirect ke halaman login
+    router.push('/Login'); // redirect ke halaman login
     };
 
     const baseMenuItems = [
