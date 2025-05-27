@@ -41,10 +41,18 @@ const Sidebar = ({ isCollapsed }) => {
         { icon: <FaUsers />, label: 'Users', hasSubmenu: true },
     ];
     
-    const menuItems =
-        user?.Role === 'Staff' ? [...baseMenuItems] : baseMenuItems;
-        user?.Role === 'Admin' ? [...baseMenuItems, ...adminMenuItems] : baseMenuItems;
-        user?.Role === 'Manager' ? [...managerItems] : baseMenuItems;
+    let menuItems;
+
+    if (user?.Role === 'admin') {
+        menuItems = [...baseMenuItems, ...managerItems, ...adminMenuItems];
+    } else if (user?.Role === 'manager') {
+        menuItems = [...baseMenuItems, ...managerItems];
+    } else if (user?.Role === 'staff') {
+        menuItems = [...baseMenuItems];
+    } else {
+        menuItems = [...baseMenuItems]; // fallback
+    }
+
 
     return (
         <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
