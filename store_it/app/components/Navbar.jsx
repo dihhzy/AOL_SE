@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import './Navbar.css';
+import '../global.css'
 
 import {
     FaSearch, FaBell
 } from 'react-icons/fa';
 
 import { useAtom, useSetAtom } from 'jotai';
-
 import { userAtom } from '../lib/userAtom';
 
 
@@ -54,17 +54,8 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-right">
-                <button className="icon-btn notification-btn">
-                    <FaBell />
-                    <span className="notification-badge">1</span>
-                </button>
 
                 <div className="navbar-user-profile">
-                    <img
-                        // src="/default-avatar.png" // Optional: pakai default image atau ambil dari DB nanti
-                        alt="User Avatar"
-                        className="user-avatar"
-                    />
                     {console.log(user)}
                     <div className="user-info">
                         <span className="user-name">

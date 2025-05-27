@@ -19,7 +19,10 @@ function Dashboard() {
         </>
 
         <div className="page-content">
-            <ProductGrid itemCount={8} />{" "}
+            {/* <ProductGrid itemCount={8} />{" "} */}
+            <h1>
+              Taro apa bang
+            </h1>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import './Sidebar.css';
 import { useAtom } from 'jotai';
 import { userAtom } from '../lib/userAtom';
 import { useRouter } from 'next/navigation';
+import '../global.css'
 
 import {
     FaHome, FaPlusSquare, FaLayerGroup, FaTrashAlt, FaShoppingBag,
@@ -29,10 +30,10 @@ const Sidebar = ({ isCollapsed }) => {
     };
 
     const baseMenuItems = [
-        { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false, to: '/' },
-        { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: true, to: '/Product' },
-        { icon: <FaLayerGroup />, label: 'Category', hasSubmenu: true, to: '/Category' },
+        { icon: <FaHome />, label: 'Home', hasSubmenu: false, to: '/Dashboard' },
         { icon: <FaCog />, label: 'Company', to: '/Company' },
+        { icon: <FaPlusSquare />, label: 'Product', hasSubmenu: false, to: '/Product' },
+        { icon: <FaLayerGroup />, label: 'Transaction', hasSubmenu: false, to: '/Transaction' },
     ];
 
     const managerItems = [

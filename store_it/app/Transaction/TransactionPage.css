@@ -1,0 +1,93 @@
+.app-layout{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content{
+    display: flex;
+    flex-direction: row;
+}
+
+.transaction-page-content {
+    padding: 20px;
+    background-color: #111827; /* bg-gray-900 */
+    color: #d1d5db; /* text-gray-300 */
+    flex-grow: 1;
+}
+
+.transaction-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #374151; /* border-gray-700 */
+}
+
+.transaction-header h2 {
+    color: #e5e7eb; /* text-gray-200 */
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.loading-message,
+.no-transactions-message {
+    color: #9ca3af; /* text-gray-400 */
+    font-size: 1rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.error-message {
+    background-color: #4b1f24; /* Darker red background for error */
+    color: #fecaca; /* Lighter red text */
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #dc2626; /* red-600 border */
+}
+
+.transactions-table-container {
+    overflow-x: auto; /* Allows table to scroll horizontally if needed */
+    background-color: #1f2937; /* bg-gray-800 */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Ensures table has a minimum width */
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #374151; /* border-gray-700 */
+}
+
+.transactions-table th {
+    background-color: #374151; /* bg-gray-700 - Header background */
+    color: #e5e7eb; /* text-gray-200 */
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #2b3649; /* Slightly lighter on hover */
+}
+
+.transactions-table td {
+    color: #d1d5db; /* text-gray-300 */
+    font-size: 0.9rem;
+}
+
+.transactions-table .quantity-positive {
+    color: #34d399; /* text-green-400 */
+    font-weight: 500;
+}
+
+.transactions-table .quantity-negative {
+    color: #f87171; /* text-red-400 */
+    font-weight: 500;
+}
