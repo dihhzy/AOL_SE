@@ -2,6 +2,7 @@ import React from 'react';
 import './Sidebar.css';
 import { useAtom } from 'jotai';
 import { userAtom } from '../lib/userAtom';
+import { useRouter } from 'next/navigation';
 
 import {
     FaHome, FaPlusSquare, FaLayerGroup, FaTrashAlt, FaShoppingBag,
@@ -16,8 +17,14 @@ const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed }) => (
     </a>
 );
 
+
 const Sidebar = ({ isCollapsed }) => {
-    const [user] = useAtom(userAtom);
+    const router = useRouter();
+    const [user, setUser] = useAtom(userAtom);
+    const handleLogout = () => {
+    setUser(null);   // reset user state di Jotai
+    router.push('/LoginPage'); // redirect ke halaman login
+    };
 
     const baseMenuItems = [
         { icon: <FaHome />, label: 'Home', isActive: true, hasSubmenu: false },
@@ -54,9 +61,12 @@ const Sidebar = ({ isCollapsed }) => {
                 ))}
             </nav>
             <div className="sidebar-footer">
-                <SidebarItem icon={<FaSignOutAlt />} label="Log Out" isCollapsed={isCollapsed} />
+                <a onClick={handleLogout} className={`sidebar-item ${isCollapsed ? 'collapsed' : ''}`} style={{cursor: 'pointer'}}>
+                <div className="sidebar-item-icon"><FaSignOutAlt /></div>
+                {!isCollapsed && <span className="sidebar-item-label">Log Out</span>}
+                    </a>
+                </div>
             </div>
-        </div>
     );
 };
 
