@@ -1,0 +1,57 @@
+.home-content-section {
+  background-color: #ffffff;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.home-content-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.home-content-title span {
+  color: #3b82f6; /* Tailwind Sky Blue */
+}
+
+.home-content-subtitle {
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.home-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.home-step-card {
+  background: white;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  max-width: 300px;
+  transition: transform 0.3s ease;
+}
+
+.home-step-card:hover {
+  transform: translateY(-5px);
+}
+
+.home-step-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.home-step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.home-step-description {
+  font-size: 1rem;
+  color: #555;
+}

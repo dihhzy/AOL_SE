@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import ProductGrid from "../components/ProductGrid";
 import "./Dashboard.css";
 import '../global.css';
+import HomeContent from '../components/HomeContent';
 
 
 function Dashboard() {
@@ -21,7 +22,7 @@ function Dashboard() {
         <div className="page-content">
             {/* <ProductGrid itemCount={8} />{" "} */}
             <h1>
-              Taro apa bang
+              <HomeContent/>
             </h1>
         </div>
       </div>
