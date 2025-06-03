@@ -1,0 +1,41 @@
+.app-layout{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content{
+    display: flex;
+    flex-direction: row;
+}
+
+/* Inherit layout from global or dashboard if needed, or define here */
+/* .app-layout and .main-content are already in your file, so I'll style the product specific parts */
+.company-page-content {
+  padding: 20px;
+}
+
+.company-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.company-list-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.company-item-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: 250px;
+  transition: box-shadow 0.3s ease;
+}
+
+.company-item-card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
