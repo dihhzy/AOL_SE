@@ -1,6 +1,10 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import './ShowAllUsers.css'
+import "../global.css";
 
 export default function ShowAllUsers() {
   const [users, setUsers] = useState([]);
@@ -25,8 +29,14 @@ export default function ShowAllUsers() {
   }, []);
 
   return (
+    <div className="app-layout">
+      <Navbar />
+
+      <div className="main-content">
+          <Sidebar />
+
     <div className="app-wrapper">
-      <div className="container" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
+      <div className="container" style={{ paddingTop: '1rem', paddingBottom: '5rem' }}>
         <h1 className="section-title" style={{ marginBottom: '2rem', color: 'white' }}>
           Users List
         </h1>
@@ -39,7 +49,7 @@ export default function ShowAllUsers() {
         )}
 
         {!loading && !error && users.length > 0 && (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table style={{ width: '220%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid #374151' }}>
                 <th style={thStyle}>ID</th>
@@ -50,7 +60,7 @@ export default function ShowAllUsers() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} style={trStyle}>
+                <tr key={user.UserID} style={trStyle}>
                   <td style={tdStyle}>{user.UserID}</td>
                   <td style={tdStyle}>{user.Username}</td>
                   <td style={tdStyle}>{user.Email}</td>
@@ -61,6 +71,8 @@ export default function ShowAllUsers() {
           </table>
         )}
       </div>
+    </div>
+    </div>
     </div>
   );
 }
