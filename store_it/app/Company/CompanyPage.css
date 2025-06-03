@@ -1,41 +1,76 @@
-.app-layout{
+.app-layout {
     display: flex;
     flex-direction: column;
 }
 
-.main-content{
+.main-content {
     display: flex;
     flex-direction: row;
 }
 
-/* Inherit layout from global or dashboard if needed, or define here */
-/* .app-layout and .main-content are already in your file, so I'll style the product specific parts */
 .company-page-content {
-  padding: 20px;
+    padding: 20px;
+    background-color: #111827; /* bg-gray-900 - Main dark background */
+    color: #d1d5db; /* text-gray-300 - Default light text */
+    flex-grow: 1; /* Ensure it takes available space */
 }
 
 .company-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #374151; /* border-gray-700 */
+}
+
+.company-header h2 {
+    color: #e5e7eb; /* text-gray-200 or white for headers */
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 .company-list-display {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 20px;
 }
 
 .company-item-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  width: 250px;
-  transition: box-shadow 0.3s ease;
+    background-color: #1f2937; /* bg-gray-800 - Card background */
+    border: 1px solid #374151; /* border-gray-700 */
+    border-radius: 8px; /* rounded-lg */
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .company-item-card:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.company-item-card h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #38bdf8; /* text-sky-400 - Accent color for company name */
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.company-item-card p {
+    font-size: 0.9rem;
+    color: #9ca3af; /* text-gray-400 */
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.company-item-card p:last-child {
+    margin-bottom: 0;
+}
+
+.error-message {
+    color: #f87171; /* red-400 */
+    margin-bottom: 15px;
 }
