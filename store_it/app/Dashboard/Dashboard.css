@@ -7,3 +7,140 @@
     display: flex;
     flex-direction: row;
 }
+
+.dashboard-content {
+  padding: 2rem;
+  background-color: #111827;
+  color: #d1d5db;
+  flex-grow: 1;
+}
+
+.dashboard-welcome {
+  margin-bottom: 2rem;
+}
+
+.dashboard-welcome h1 {
+  color: #e5e7eb;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-welcome p {
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background-color: #1f2937;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+}
+
+.metric-card h3 {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.metric-value {
+  color: #e5e7eb;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.metric-value.warning {
+  color: #f59e0b;
+}
+
+.quick-actions {
+  margin-bottom: 2rem;
+}
+
+.quick-actions h2 {
+  color: #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-btn.primary {
+  background-color: #0ea5e9;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background-color: #0284c7;
+}
+
+.action-btn.secondary {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.action-btn.secondary:hover {
+  background-color: #4b5563;
+}
+
+.stock-alerts {
+  margin-bottom: 2rem;
+}
+
+.stock-alerts h2 {
+  color: #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.alert-list {
+  background-color: #1f2937;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+  overflow: hidden;
+}
+
+.alert-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #374151;
+}
+
+.alert-item:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+.stock-level.danger {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.dashboard-info {
+  margin-top: 3rem;
+}
