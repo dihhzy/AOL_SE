@@ -13,6 +13,7 @@ function CompanyPage() {
   const [companies, setCompanies] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingCompanyId, setDeletingCompanyId] = useState(null);
   const [sessionUser] = useAtom(userAtom);
   const router = useRouter();
 
@@ -49,6 +50,45 @@ function CompanyPage() {
 
     fetchCompanies();
   }, [sessionUser]);
+
+  const handleDeleteCompany = async (companyId, companyName) => {
+    // Show confirmation dialog
+    const isConfirmed = window.confirm(
+      `Are you sure you want to delete "${companyName}"?\n\nThis action cannot be undone and will remove all associated data.`
+    );
+
+    if (!isConfirmed) return;
+
+    setDeletingCompanyId(companyId);
+    
+    try {
+      const response = await fetch(`/api/companies/${companyId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      // Remove the company from the local state
+      setCompanies(prevCompanies => 
+        prevCompanies.filter(company => company.CompanyID !== companyId)
+      );
+
+      // Show success message
+      alert(`Company "${companyName}" has been successfully deleted.`);
+
+    } catch (err) {
+      console.error("Failed to delete company:", err);
+      alert(`Error deleting company: ${err.message}`);
+    } finally {
+      setDeletingCompanyId(null);
+    }
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -153,6 +193,17 @@ function CompanyPage() {
                       <span>✏️</span>
                       Edit
                     </button> */}
+                    <button 
+                      className={`action-button danger ${deletingCompanyId === company.CompanyID ? 'deleting' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCompany(company.CompanyID, company.CompanyName);
+                      }}
+                      disabled={deletingCompanyId === company.CompanyID}
+                    >
+                      <span>{deletingCompanyId === company.CompanyID ? '⏳' : '🗑️'}</span>
+                      {deletingCompanyId === company.CompanyID ? 'Deleting...' : 'Delete'}
+                    </button>
                   </div>
                 </div>
               ))}
