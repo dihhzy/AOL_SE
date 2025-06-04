@@ -51,6 +51,38 @@ function CompanyPage() {
     fetchCompanies();
   }, [sessionUser]);
 
+  // Tambahkan state baru di atas
+const [showAddModal, setShowAddModal] = useState(false);
+const [newCompany, setNewCompany] = useState({
+  CompanyName: '',
+  Email: '',
+  Password: '',
+});
+
+// Tambahkan fungsi ini di bawah handleDelete
+const handleAddCompany = async () => {
+  try {
+    const payload = {
+      ...newCompany,
+      OwnerUserID: sessionUser.UserID
+    };
+    const res = await fetch('/api/addcompanies', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Failed to add company');
+    const added = await res.json();
+    setCompanies(prev => [...prev, added]);
+    setShowAddModal(false);
+    setNewCompany({ CompanyName: '', Email: '', Password: '' });
+  } catch (err) {
+    alert('Error adding company: ' + err.message);
+  }
+};
+
+
+
   const handleDeleteCompany = async (companyId, companyName) => {
     // Show confirmation dialog
     const isConfirmed = window.confirm(
@@ -117,8 +149,12 @@ function CompanyPage() {
         <Sidebar />
         <div className="page-content company-page-content">
           <div className="company-header">
-            <h2>Your Companies</h2>
-          </div>
+  <h2>Your Companies <button className="add-product-button" onClick={() => setShowAddModal(true)}>+ Add Company</button> </h2>
+  
+
+ 
+</div>
+
 
           {/* Company Statistics */}
           {!isLoading && !error && companies.length > 0 && (
@@ -139,7 +175,35 @@ function CompanyPage() {
           )}
 
           {error && <p className="error-message">Error: {error}</p>}
-
+          {showAddModal && (
+  <div className="modal-overlay">
+    <div className="confirm-modal">
+      <h3>Add Company</h3>
+      <input
+        type="text"
+        placeholder="Company Name"
+        value={newCompany.CompanyName}
+        onChange={e => setNewCompany({ ...newCompany, CompanyName: e.target.value })}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={newCompany.Email}
+        onChange={e => setNewCompany({ ...newCompany, Email: e.target.value })}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={newCompany.Password}
+        onChange={e => setNewCompany({ ...newCompany, Password: e.target.value })}
+      />
+      <div className="modal-actions">
+        <button onClick={() => setShowAddModal(false)} className="cancel-btn">Cancel</button>
+        <button onClick={handleAddCompany} className="add-confirm-btn">Add</button>
+      </div>
+    </div>
+  </div>
+)}
           {isLoading ? (
             <p className="loading-message">Loading companies...</p>
           ) : companies.length > 0 ? (
@@ -211,7 +275,13 @@ function CompanyPage() {
           ) : (
             <p className="no-companies-message">No companies to display.</p>
           )}
+
+          
+
+          
         </div>
+
+        
       </div>
     </div>
   );
