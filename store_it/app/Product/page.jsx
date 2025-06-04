@@ -21,6 +21,12 @@ function Product() {
   const [error, setError] = useState(null);
   const [categoriesError, setCategoriesError] = useState(null);
 
+  // Calculate statistics
+  const totalProducts = products.length;
+  const totalQuantity = products.reduce((sum, product) => sum + (product.quantity || 0), 0);
+  const lowStockProducts = products.filter(product => product.quantity < 10).length;
+  const averageQuantity = totalProducts > 0 ? Math.round(totalQuantity / totalProducts) : 0;
+
   useEffect(() => {
     const fetchData = async () => {
       // Fetch Products
@@ -109,7 +115,7 @@ function Product() {
       <Navbar />
 
       <div className="main-content">
-          <Sidebar />
+        <Sidebar />
 
         <div className="page-content product-page-content">
           <div className="product-header">
@@ -119,9 +125,32 @@ function Product() {
             </button>
           </div>
 
-          {error && <p className="error-message" style={{color: 'red'}}>Error fetching products: {error}</p>}
-          {categoriesError && <p className="error-message" style={{color: 'red'}}>Error fetching categories: {categoriesError}</p>}
+          {error && <p className="error-message">Error fetching products: {error}</p>}
+          {categoriesError && <p className="error-message">Error fetching categories: {categoriesError}</p>}
 
+          {/* Product Statistics */}
+          {!isLoading && !error && products.length > 0 && (
+            <div className="product-stats">
+              <div className="stat-card">
+                <h3>Total Products</h3>
+                <p className="stat-value">{totalProducts}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Total Quantity</h3>
+                <p className="stat-value" style={{color: '#10b981'}}>{totalQuantity}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Low Stock Items</h3>
+                <p className="stat-value" style={{color: lowStockProducts > 0 ? '#f59e0b' : '#10b981'}}>
+                  {lowStockProducts}
+                </p>
+              </div>
+              <div className="stat-card">
+                <h3>Average Quantity</h3>
+                <p className="stat-value" style={{color: '#38bdf8'}}>{averageQuantity}</p>
+              </div>
+            </div>
+          )}
 
           {showAddForm && (
             <div className="add-product-form-container">
@@ -133,6 +162,7 @@ function Product() {
                     type="text"
                     id="name"
                     name="name"
+                    placeholder="Enter product name..."
                     value={newProduct.name}
                     onChange={handleInputChange}
                     required
@@ -144,6 +174,7 @@ function Product() {
                     type="number"
                     id="quantity"
                     name="quantity"
+                    placeholder="Enter quantity..."
                     value={newProduct.quantity}
                     onChange={handleInputChange}
                     required
@@ -155,6 +186,7 @@ function Product() {
                   <textarea
                     id="description"
                     name="description"
+                    placeholder="Enter product description..."
                     value={newProduct.description}
                     onChange={handleInputChange}
                   />
@@ -179,7 +211,7 @@ function Product() {
                       ))
                     )}
                   </select>
-                  {categoriesError && !isCategoriesLoading && <p style={{color: 'red', fontSize: '0.8em'}}>Could not load categories.</p>}
+                  {categoriesError && !isCategoriesLoading && <p style={{color: '#fca5a5', fontSize: '0.8em'}}>Could not load categories.</p>}
                 </div>
                 <button type="submit" className="submit-product-button">Add Product</button>
               </form>
@@ -187,20 +219,21 @@ function Product() {
           )}
 
           {isLoading ? (
-            <p>Loading products...</p>
+            <p className="loading-message">Loading products...</p>
           ) : products.length > 0 ? (
             <div className="product-list-display">
               {products.map(product => (
                 <div key={product.id} className="product-item-card">
                   <h4>{product.name}</h4>
-                  {/* Tambah category yak */}   
                   <p>Quantity: {product.quantity}</p>
-                  <p>Description: {product.description || "N/A"}</p>
+                  <p>Description: {product.description || "No description available"}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <p>{error ? 'Could not load products.' : 'No products to display.'}</p>
+            <p className="no-products-message">
+              {error ? 'Could not load products.' : 'No products to display.'}
+            </p>
           )}
         </div>
       </div>

@@ -12,6 +12,12 @@ function Transaction() {
   const [error, setError] = useState(null);
   const targetUserId = 2;
 
+  // Calculate statistics
+  const totalTransactions = transactions.length;
+  const totalRestock = transactions.filter(t => t.TransactionType === 'restock').length;
+  const totalSales = transactions.filter(t => t.TransactionType === 'sale').length;
+  const totalQuantityChange = transactions.reduce((sum, t) => sum + t.QuantityChange, 0);
+
   useEffect(() => {
     const fetchTransactions = async () => {
       setIsLoading(true);
@@ -36,6 +42,16 @@ function Transaction() {
     fetchTransactions();
   }, [targetUserId]);
 
+  const formatTimestamp = (timestamp) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div className="app-layout">
       <Navbar />
@@ -43,11 +59,31 @@ function Transaction() {
         <Sidebar />
         <div className="page-content transaction-page-content">
           <div className="transaction-header">
-            <h2>User Transactions (UserID: {targetUserId})</h2>
+            <h2>Transaction History</h2>
           </div>
 
+          {/* Statistics Cards */}
+          {!isLoading && !error && transactions.length > 0 && (
+            <div className="transaction-stats">
+              <div className="stat-card">
+                <h3>Total Transactions</h3>
+                <p className="stat-value">{totalTransactions}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Restocks</h3>
+                <p className="stat-value" style={{color: '#34d399'}}>{totalRestock}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Net Change</h3>
+                <p className="stat-value" style={{color: totalQuantityChange >= 0 ? '#34d399' : '#f87171'}}>
+                  {totalQuantityChange >= 0 ? '+' : ''}{totalQuantityChange}
+                </p>
+              </div>
+            </div>
+          )}
+
           {isLoading && <p className="loading-message">Loading transactions...</p>}
-          {error && <p className="error-message" style={{ color: '#f87171' }}>Error: {error}</p>}
+          {error && <p className="error-message">Error: {error}</p>}
           
           {!isLoading && !error && transactions.length === 0 && (
             <p className="no-transactions-message">No transactions found for this user.</p>
@@ -55,30 +91,51 @@ function Transaction() {
 
           {!isLoading && !error && transactions.length > 0 && (
             <div className="transactions-table-container">
-              <table className="transactions-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Product Name</th>
-                    <th>Type</th>
-                    <th>Quantity Change</th>
-                    <th>Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((transaction) => (
-                    <tr key={transaction.TransactionID}>
-                      <td>{transaction.TransactionID}</td>
-                      <td>{transaction.ProductName} (ID: {transaction.ProductID})</td>
-                      <td>{transaction.TransactionType}</td>
-                      <td className={transaction.QuantityChange > 0 ? 'quantity-positive' : 'quantity-negative'}>
-                        {transaction.QuantityChange > 0 ? `+${transaction.QuantityChange}` : transaction.QuantityChange}
-                      </td>
-                      <td>{transaction.Timestamp}</td>
+              <div className="table-scroll-wrapper">
+                <table className="transactions-table">
+                  <thead>
+                    <tr>
+                      <th>Transaction ID</th>
+                      <th>Product Details</th>
+                      <th>Type</th>
+                      <th>Quantity Change</th>
+                      <th>Date & Time</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {transactions.map((transaction) => (
+                      <tr key={transaction.TransactionID}>
+                        <td>
+                          <span className="transaction-id">
+                            #{transaction.TransactionID}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="product-info">
+                            <span className="product-name">{transaction.ProductName}</span>
+                            <span className="product-id">ID: {transaction.ProductID}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`transaction-type ${transaction.TransactionType.toLowerCase()}`}>
+                            {transaction.TransactionType}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`quantity-change ${transaction.QuantityChange > 0 ? 'quantity-positive' : 'quantity-negative'}`}>
+                            {transaction.QuantityChange > 0 ? `+${transaction.QuantityChange}` : transaction.QuantityChange}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="timestamp">
+                            {formatTimestamp(transaction.Timestamp)}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

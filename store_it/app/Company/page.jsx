@@ -5,11 +5,9 @@ import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { userAtom } from '../lib/userAtom';
-
 import { useRouter } from "next/navigation";
 import './CompanyPage.css';
 import "../global.css";
-
 
 function CompanyPage() {
   const [companies, setCompanies] = useState([]);
@@ -17,6 +15,15 @@ function CompanyPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [sessionUser] = useAtom(userAtom);
   const router = useRouter();
+
+  // Calculate statistics
+  const totalCompanies = companies.length;
+  const recentCompanies = companies.filter(company => {
+    const createdDate = new Date(company.CreatedAt);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    return createdDate > thirtyDaysAgo;
+  }).length;
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -43,6 +50,26 @@ function CompanyPage() {
     fetchCompanies();
   }, [sessionUser]);
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const getTimeAgo = (dateString) => {
+    const now = new Date();
+    const created = new Date(dateString);
+    const diffInDays = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays === 0) return 'Today';
+    if (diffInDays === 1) return '1 day ago';
+    if (diffInDays < 30) return `${diffInDays} days ago`;
+    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
+    return `${Math.floor(diffInDays / 365)} years ago`;
+  };
+
   return (
     <div className="app-layout">
       <Navbar />
@@ -53,27 +80,85 @@ function CompanyPage() {
             <h2>Your Companies</h2>
           </div>
 
-          {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
+          {/* Company Statistics */}
+          {!isLoading && !error && companies.length > 0 && (
+            <div className="company-stats">
+              <div className="stat-card">
+                <h3>Total Companies</h3>
+                <p className="stat-value">{totalCompanies}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Recent (30 days)</h3>
+                <p className="stat-value" style={{color: '#10b981'}}>{recentCompanies}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Active Status</h3>
+                <p className="stat-value" style={{color: '#38bdf8'}}>All Active</p>
+              </div>
+            </div>
+          )}
+
+          {error && <p className="error-message">Error: {error}</p>}
 
           {isLoading ? (
-            <p>Loading companies...</p>
+            <p className="loading-message">Loading companies...</p>
           ) : companies.length > 0 ? (
             <div className="company-list-display">
               {companies.map(company => (
-                <div
-                  key={company.CompanyID}
-                  className="company-item-card"
-                  onClick={() => router.push('/Product')}
-                  style={{ cursor: 'pointer' }}
-                >
+                <div key={company.CompanyID} className="company-item-card">
                   <h4>{company.CompanyName}</h4>
-                  <p>Email: {company.Email}</p>
-                  <p>Created At: {new Date(company.CreatedAt).toLocaleDateString()}</p>
+                  
+                  <div className="company-info">
+                    <div className="info-item">
+                      <span className="info-icon">📧</span>
+                      <div className="info-content">
+                        <div className="info-label">Email</div>
+                        <div className="info-value">{company.Email}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="info-item">
+                      <span className="info-icon">📅</span>
+                      <div className="info-content">
+                        <div className="info-label">Created</div>
+                        <div className="info-value">{formatDate(company.CreatedAt)}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="info-item">
+                      <span className="info-icon">⏰</span>
+                      <div className="info-content">
+                        <div className="info-label">Time Since</div>
+                        <div className="info-value">{getTimeAgo(company.CreatedAt)}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="company-actions">
+                    <button 
+                      className="action-button primary"
+                      onClick={() => router.push('/Product')}
+                    >
+                      <span>📦</span>
+                      View Products
+                    </button>
+                    {/* <button 
+                      className="action-button secondary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Add edit functionality here
+                        console.log('Edit company:', company.CompanyID);
+                      }}
+                    >
+                      <span>✏️</span>
+                      Edit
+                    </button> */}
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p>No companies to display.</p>
+            <p className="no-companies-message">No companies to display.</p>
           )}
         </div>
       </div>

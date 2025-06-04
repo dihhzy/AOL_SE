@@ -1,130 +1,285 @@
 /* Navbar Styles */
 .dashboard-navbar {
-    background-color: #111827; /* bg-gray-900 - Main theme background */
-    color: #d1d5db; /* text-gray-300 */
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    color: #d1d5db;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1.5rem; /* Adjusted padding */
-    border-bottom: 1px solid #1f2937; /* bg-gray-800 - A slightly lighter border */
+    padding: 0.75rem 1.5rem;
+    border-bottom: 2px solid rgba(56, 189, 248, 0.2);
     height: 5vh;
     top: 0;
     right: 0;
-    transition: left 0.3s ease-in-out; /* For when sidebar collapses */
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1000;
+}
+
+.dashboard-navbar::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
 }
 
 .navbar-left,
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem; /* Spacing between items */
+    gap: 1rem;
 }
 
-.sidebar-toggle-btn {
-    font-size: 1.25rem;
-    color: #9ca3af; /* text-gray-400 */
+.navbar-header {
+    align-items: center;
+    width: 13vw;
+    position: relative;
 }
 
-.sidebar-toggle-btn:hover {
-    color: #38bdf8; /* text-sky-400 */
+.navbar-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e5e7eb 0%, #38bdf8 50%, #10b981 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-logo::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8, #10b981);
+    transition: width 0.3s ease;
+}
+
+.navbar-logo:hover::after {
+    width: 100%;
 }
 
 .navbar-search-container {
     display: flex;
     align-items: center;
-    background-color: #1f2937; /* bg-gray-800 */
-    border-radius: 0.375rem; /* rounded-md */
-    padding: 0.5rem 0.75rem;
-    min-width: 250px; /* Or adjust as needed */
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    min-width: 280px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-search-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.navbar-search-container:focus-within::before {
+    left: 100%;
+}
+
+.navbar-search-container:focus-within {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    transform: translateY(-1px);
 }
 
 .search-icon {
-    color: #9ca3af; /* text-gray-400 */
-    margin-right: 0.5rem;
+    color: #9ca3af;
+    margin-right: 0.75rem;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.navbar-search-container:focus-within .search-icon {
+    color: #38bdf8;
+    transform: scale(1.1);
 }
 
 .navbar-search-input {
     background-color: transparent;
     border: none;
-    color: #d1d5db; /* text-gray-300 */
+    color: #d1d5db;
     outline: none;
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem;
     width: 100%;
+    z-index: 1;
+    position: relative;
 }
 
 .navbar-search-input::placeholder {
-    color: #6b7280; /* text-gray-500 */
+    color: #6b7280;
+    transition: color 0.3s ease;
 }
 
-/* Icon Button Base (reusable for navbar icons) */
+.navbar-search-input:focus::placeholder {
+    color: #9ca3af;
+}
+
 .icon-btn {
     background-color: transparent;
     border: none;
-    color: #9ca3af; /* text-gray-400 */
-    font-size: 1.25rem; /* Adjust as needed for icon size */
-    padding: 0.5rem;
-    border-radius: 50%; /* For a circular background on hover/focus if desired */
+    color: #9ca3af;
+    font-size: 1.25rem;
+    padding: 0.75rem;
+    border-radius: 12px;
     cursor: pointer;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    position: relative; /* For badges */
+    transition: all 0.3s ease;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(56, 189, 248, 0.2);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.icon-btn:hover::before {
+    width: 100px;
+    height: 100px;
 }
 
 .icon-btn:hover {
-    color: #38bdf8; /* text-sky-400 */
-    background-color: #2c3647; /* Slightly lighter gray for hover */
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
 }
 
 .icon-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5); /* Focus ring */
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
 }
 
 .language-btn {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 1rem; /* For the text part */
+    gap: 0.5rem;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: rgba(55, 65, 81, 0.3);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    transition: all 0.3s ease;
 }
+
 .language-btn .language-indicator {
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.75rem;
     font-weight: 600;
     color: #d1d5db;
+    transition: all 0.3s ease;
 }
+
+.language-btn:hover {
+    background: rgba(55, 65, 81, 0.5);
+    border-color: #38bdf8;
+}
+
 .language-btn:hover .language-indicator {
     color: #38bdf8;
 }
 
-
 .notification-badge {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    background-color: #ef4444; /* red-500 for notifications */
+    top: 4px;
+    right: 4px;
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
     color: white;
-    font-size: 0.65rem; /* text-xs */
+    font-size: 0.6rem;
     font-weight: bold;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #111827; /* Match navbar bg for a 'cutout' look */
+    border: 2px solid #111827;
+    animation: pulse 2s infinite;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 }
 
 .notification-badge.blue {
-    background-color: #3b82f6; /* blue-500 */
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
 }
-
 
 .navbar-user-profile {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-left: 0.5rem; /* Extra spacing before user profile */
+    gap: 1rem;
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    background: rgba(31, 41, 55, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(55, 65, 81, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-user-profile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8, #10b981);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.navbar-user-profile:hover::before {
+    transform: scaleX(1);
+}
+
+.navbar-user-profile:hover {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: rgba(56, 189, 248, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .user-avatar {
@@ -132,7 +287,15 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #38bdf8; /* text-sky-400 - accent border */
+    border: 2px solid #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    transition: all 0.3s ease;
+}
+
+.navbar-user-profile:hover .user-avatar {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    transform: scale(1.05);
 }
 
 .user-info {
@@ -142,24 +305,78 @@
 }
 
 .user-name {
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 600; /* font-semibold */
-    color: #e5e7eb; /* text-gray-200 */
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    transition: all 0.3s ease;
 }
 
 .user-role {
-    font-size: 0.75rem; /* text-xs */
-    color: #9ca3af; /* text-gray-400 */
+    font-size: 0.75rem;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.navbar-header {
-    align-items: center;
-    width: 13vw;
+.navbar-user-profile:hover .user-name {
+    color: #38bdf8;
 }
 
-.navbar-logo {
-    font-size: 1.75rem; /* text-3xl */
-    font-weight: 700; /* font-bold */
-    color: #e5e7eb; /* Brighter white for logo */
-    margin: 0;
+.navbar-user-profile:hover .user-role {
+    color: #10b981;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-navbar {
+        padding: 0.5rem 1rem;
+        height: auto;
+        min-height: 60px;
+    }
+    
+    .navbar-left {
+        flex: 1;
+    }
+    
+    .navbar-header {
+        width: auto;
+    }
+    
+    .navbar-logo {
+        font-size: 1.5rem;
+    }
+    
+    .navbar-search-container {
+        min-width: 200px;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .navbar-user-profile {
+        padding: 0.5rem;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-search-container {
+        min-width: 150px;
+    }
+    
+    .navbar-logo {
+        font-size: 1.25rem;
+    }
+    
+    .icon-btn {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
 }

@@ -4,36 +4,25 @@ import './Navbar.css';
 import '../global.css'
 
 import {
-    FaSearch, FaBell
+    FaSearch, FaBell, FaUser
 } from 'react-icons/fa';
 
 import { useAtom, useSetAtom } from 'jotai';
 import { userAtom } from '../lib/userAtom';
 
-
-
 const Navbar = () => {
     const [user] = useAtom(userAtom);
-    const setUser = useSetAtom(userAtom); // ✅ tambahkan ini
+    const setUser = useSetAtom(userAtom);
     const [searchTerm, setSearchTerm] = useState('');
+    const [hasNotifications, setHasNotifications] = useState(true); // Demo state
 
-    // useEffect(() => {
-    //     fetch('/api/me')
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             if (data) {
-    //                 console.log("data", data)
-    //                 setUser(data); // ✅ set hasil API ke Jotai
-    //             } else {
-    //                 console.log('User tidak login', data);
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.error('Gagal ambil user:', err);
-    //         });
-    // }, []);
-
-
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            // Implement search functionality
+            console.log('Searching for:', searchTerm);
+        }
+    };
 
     return (
         <nav className="dashboard-navbar">
@@ -41,28 +30,31 @@ const Navbar = () => {
                 <div className="navbar-header">
                     <h1 className="navbar-logo">StoreIT</h1>
                 </div>
-                <div className="navbar-search-container">
+                {/* <form onSubmit={handleSearch} className="navbar-search-container">
                     <FaSearch className="search-icon" />
                     <input
                         type="text"
-                        placeholder="Search"
+                        placeholder="Search products, companies, transactions..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="navbar-search-input"
                     />
-                </div>
+                </form> */}
             </div>
 
             <div className="navbar-right">
 
+                {/* User Profile */}
                 <div className="navbar-user-profile">
-                    {console.log(user)}
+                    {/* <div className="user-avatar">
+                        <FaUser style={{ width: '80%', height: '80%' }} />
+                    </div> */}
                     <div className="user-info">
                         <span className="user-name">
                             {user ? user.Username : 'Loading...'}
                         </span>
                         <span className="user-role">
-                            {user ? user.Role : ''}
+                            {user ? user.Role : 'User'}
                         </span>
                     </div>
                 </div>

@@ -21,15 +21,38 @@ function Dashboard() {
   });
   const [recentActivities, setRecentActivities] = useState([]);
   const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     // Fetch dashboard data
     const fetchDashboardData = async () => {
+      setIsLoading(true);
       try {
         // Fetch products count
         const productsRes = await fetch('/api/product');
         const products = await productsRes.json();
+        
+        // Fetch companies count
+        const companiesRes = await fetch(`/api/companies?ownerId=${user?.UserID}`);
+        const companies = companiesRes.ok ? await companiesRes.json() : [];
+        
+        // Fetch transactions count (if API exists)
+        let transactionCount = 0;
+        try {
+          const transactionsRes = await fetch(`/api/transactions?userId=${user?.UserID}`);
+          if (transactionsRes.ok) {
+            const transactions = await transactionsRes.json();
+            // Count recent transactions (last 7 days)
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            transactionCount = transactions.filter(t => 
+              new Date(t.Timestamp) > weekAgo
+            ).length;
+          }
+        } catch (transactionError) {
+          console.log('Transactions API not available');
+        }
         
         // Calculate metrics
         const totalProducts = products.length;
@@ -38,13 +61,15 @@ function Dashboard() {
         setDashboardData({
           totalProducts,
           lowStockCount: lowStockProducts.length,
-          recentTransactions: 0, // Implement based on your transaction API
-          activeCompanies: 1 // Implement based on your companies API
+          recentTransactions: transactionCount,
+          activeCompanies: companies.length
         });
         
         setLowStockProducts(lowStockProducts);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -52,6 +77,13 @@ function Dashboard() {
       fetchDashboardData();
     }
   }, [user]);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
 
   return (
     <div className="app-layout">
@@ -63,26 +95,26 @@ function Dashboard() {
         <div className="page-content dashboard-content">
           {/* Welcome Section */}
           <div className="dashboard-welcome">
-            <h1>Welcome back, {user?.Username}!</h1>
+            <h1>{getGreeting()}, {user?.Username}!</h1>
             <p>Here's what's happening with your inventory today.</p>
           </div>
 
           {/* Key Metrics */}
           <div className="dashboard-metrics">
-            <div className="metric-card">
-              <h3>Total Products</h3>
+            <div className={`metric-card ${isLoading ? 'loading' : ''}`}>
+              <h3>📦 Total Products</h3>
               <span className="metric-value">{dashboardData.totalProducts}</span>
             </div>
-            <div className="metric-card">
-              <h3>Low Stock Items</h3>
+            <div className={`metric-card ${isLoading ? 'loading' : ''}`}>
+              <h3>⚠️ Low Stock Items</h3>
               <span className="metric-value warning">{dashboardData.lowStockCount}</span>
             </div>
-            <div className="metric-card">
-              <h3>Recent Transactions</h3>
+            <div className={`metric-card ${isLoading ? 'loading' : ''}`}>
+              <h3>📊 Recent Transactions</h3>
               <span className="metric-value">{dashboardData.recentTransactions}</span>
             </div>
-            <div className="metric-card">
-              <h3>Active Companies</h3>
+            <div className={`metric-card ${isLoading ? 'loading' : ''}`}>
+              <h3>🏢 Active Companies</h3>
               <span className="metric-value">{dashboardData.activeCompanies}</span>
             </div>
           </div>
@@ -95,19 +127,19 @@ function Dashboard() {
                 onClick={() => router.push('/Product')} 
                 className="action-btn primary"
               >
-                Add New Product
+                📦 Add New Product
               </button>
               <button 
                 onClick={() => router.push('/Company')} 
                 className="action-btn secondary"
               >
-                Manage Companies
+                🏢 Manage Companies
               </button>
               <button 
                 onClick={() => router.push('/Transaction')} 
                 className="action-btn secondary"
               >
-                Record Transaction
+                📊 View Transactions
               </button>
             </div>
           </div>
@@ -123,14 +155,17 @@ function Dashboard() {
                     <span className="stock-level danger">{product.quantity} remaining</span>
                   </div>
                 ))}
+                {lowStockProducts.length > 5 && (
+                  <div className="alert-item">
+                    <span className="product-name">...</span>
+                    <span className="stock-level" style={{color: '#9ca3af'}}>
+                      +{lowStockProducts.length - 5} more items
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}
-
-          {/* How StoreIT Works Section */}
-          <div className="dashboard-info">
-            
-          </div>
         </div>
       </div>
     </div>
