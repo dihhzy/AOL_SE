@@ -9,7 +9,7 @@ import '../global.css'
 import {
     FaHome, FaPlusSquare, FaLayerGroup, FaTrashAlt, FaShoppingBag,
     FaUsers, FaGlobeAmericas, FaChartBar, FaCog, FaQuestionCircle, 
-    FaSignOutAlt, FaAngleRight, FaBuilding
+    FaSignOutAlt, FaAngleRight, FaBuilding, FaUserTie, FaUserShield
 } from 'react-icons/fa';
 
 const SidebarItem = ({ icon, label, isActive, hasSubmenu, isCollapsed, onClick, to }) => (
@@ -40,6 +40,7 @@ const Sidebar = ({ isCollapsed }) => {
         }, 500);
     };
 
+    // Base menu items - accessible to all roles
     const baseMenuItems = [
         { 
             icon: <FaHome />, 
@@ -47,10 +48,25 @@ const Sidebar = ({ isCollapsed }) => {
             hasSubmenu: false, 
             to: '/Dashboard',
             isActive: pathname === '/Dashboard'
-        },
+        }
+    ];
+
+    // Staff-only menu items (can only manage products)
+    const staffMenuItems = [
+        { 
+            icon: <FaPlusSquare />, 
+            label: 'Products', 
+            hasSubmenu: false, 
+            to: '/Product',
+            isActive: pathname === '/Product'
+        }
+    ];
+
+    // Company Owner menu items (can manage companies, products, and transactions)
+    const companyOwnerMenuItems = [
         { 
             icon: <FaBuilding />, 
-            label: 'Company', 
+            label: 'Companies', 
             to: '/Company',
             isActive: pathname === '/Company'
         },
@@ -68,51 +84,92 @@ const Sidebar = ({ isCollapsed }) => {
             to: '/Transaction',
             isActive: pathname === '/Transaction'
         },
+        { 
+            icon: <FaChartBar />, 
+            label: 'Reports', 
+            to: '/CompanyReport',
+            isActive: pathname === '/CompanyReport'
+        }
     ];
 
-    const managerItems = [
+    // Admin menu items (full access to everything)
+    const adminMenuItems = [
+        { 
+            icon: <FaBuilding />, 
+            label: 'Companies', 
+            to: '/Company',
+            isActive: pathname === '/Company'
+        },
+        { 
+            icon: <FaPlusSquare />, 
+            label: 'Products', 
+            hasSubmenu: false, 
+            to: '/Product',
+            isActive: pathname === '/Product'
+        },
+        { 
+            icon: <FaLayerGroup />, 
+            label: 'Transactions', 
+            hasSubmenu: false, 
+            to: '/Transaction',
+            isActive: pathname === '/Transaction'
+        },
         { 
             icon: <FaChartBar />, 
             label: 'Reports', 
             to: '/CompanyReport',
             isActive: pathname === '/CompanyReport'
         },
-    ];
-
-    const adminMenuItems = [
         { 
             icon: <FaUsers />, 
-            label: 'Users', 
-            hasSubmenu: true, 
+            label: 'User Management', 
+            hasSubmenu: false, 
             to: '/ShowAllUsers',
             isActive: pathname === '/ShowAllUsers'
-        },
+        }
     ];
 
-    let menuItems;
-
-    if (user?.Role === 'admin') {
-        menuItems = [...baseMenuItems, ...managerItems, ...adminMenuItems];
-    } else if (user?.Role === 'manager') {
-        menuItems = [...baseMenuItems, ...managerItems];
-    } else if (user?.Role === 'staff') {
-        menuItems = [...baseMenuItems];
-    } else {
-        menuItems = [...baseMenuItems];
+    // Determine menu items based on user role
+    let menuItems = [...baseMenuItems];
+    
+    if (user?.Role === 'Admin') {
+        menuItems = [...baseMenuItems, ...adminMenuItems];
+    } else if (user?.Role === 'Company_Owner') {
+        menuItems = [...baseMenuItems, ...companyOwnerMenuItems];
+    } else if (user?.Role === 'Staff') {
+        menuItems = [...baseMenuItems, ...staffMenuItems];
     }
 
     const getRoleColor = (role) => {
-        switch(role) {
-            case 'admin': return '#ef4444';
-            case 'manager': return '#f59e0b';
-            case 'staff': return '#10b981';
+        switch(role?.toLowerCase()) {
+            case 'Admin': return '#ef4444';
+            case 'company_owner': return '#f59e0b';
+            case 'Staff': return '#10b981';
             default: return '#6b7280';
+        }
+    };
+
+    const getRoleIcon = (role) => {
+        switch(role?.toLowerCase()) {
+            case 'Admin': return '👑';
+            case 'company_owner': return '🏢';
+            case 'Staff': return '👤';
+            default: return '❓';
+        }
+    };
+
+    const getRoleDisplayName = (role) => {
+        switch(role?.toLowerCase()) {
+            case 'admin': return 'Admin Access';
+            case 'company_owner': return 'Owner Access';
+            case 'staff': return 'Staff Access';
+            default: return 'Guest Access';
         }
     };
 
     return (
         <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-            {/* Role Indicator
+            {/* Role Indicator */}
             {!isCollapsed && user && (
                 <div 
                     className="sidebar-role-indicator"
@@ -121,9 +178,10 @@ const Sidebar = ({ isCollapsed }) => {
                         color: getRoleColor(user.Role)
                     }}
                 >
-                    {user.Role} Access
+                    <span className="role-icon">{getRoleIcon(user.Role)}</span>
+                    {getRoleDisplayName(user.Role)}
                 </div>
-            )} */}
+            )}
 
             <nav className="sidebar-nav">
                 {menuItems.map((item, index) => (
@@ -143,6 +201,40 @@ const Sidebar = ({ isCollapsed }) => {
                     />
                 ))}
             </nav>
+
+            {/* Access Level Info */}
+            {!isCollapsed && user && (
+                <div className="sidebar-access-info">
+                    <div className="access-title">Access Level</div>
+                    <div className="access-details">
+                        {user.Role === 'Staff' && (
+                            <ul>
+                                <li>✅ View Dashboard</li>
+                                <li>✅ Manage Products</li>
+                                <li>❌ Company Management</li>
+                                <li>❌ User Management</li>
+                            </ul>
+                        )}
+                        {user.Role === 'Company_Owner' && (
+                            <ul>
+                                <li>✅ Full Dashboard Access</li>
+                                <li>✅ Company Management</li>
+                                <li>✅ Product Management</li>
+                                <li>✅ Transaction Reports</li>
+                                <li>❌ User Management</li>
+                            </ul>
+                        )}
+                        {user.Role === 'Admin' && (
+                            <ul>
+                                <li>✅ Full System Access</li>
+                                <li>✅ All Management Tools</li>
+                                <li>✅ User Administration</li>
+                                <li>✅ System Reports</li>
+                            </ul>
+                        )}
+                    </div>
+                </div>
+            )}
 
             <div className="sidebar-footer">
                 <div

@@ -249,7 +249,7 @@
     padding: 0.75rem 1.25rem;
     margin: 0.5rem 0.75rem;
     background: rgba(31, 41, 55, 0.6);
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid rgba(55, 65, 81, 0.3);
     text-align: center;
     font-size: 0.75rem;
@@ -257,10 +257,91 @@
     letter-spacing: 0.1em;
     color: #9ca3af;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar-role-indicator:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.role-icon {
+    font-size: 1rem;
 }
 
 .sidebar.collapsed .sidebar-role-indicator {
     display: none;
+}
+
+/* Access Info Section */
+.sidebar-access-info {
+    padding: 1rem 0.75rem;
+    margin: 0.5rem 0.75rem;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(55, 65, 81, 0.3);
+    font-size: 0.75rem;
+}
+
+.access-title {
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.access-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.access-details li {
+    padding: 0.25rem 0;
+    color: #d1d5db;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.access-details li:hover {
+    color: #38bdf8;
+}
+
+/* Role-specific styling */
+.sidebar[data-role="admin"] .sidebar-role-indicator {
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.sidebar[data-role="company_owner"] .sidebar-role-indicator {
+    border-color: #f59e0b;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.sidebar[data-role="staff"] .sidebar-role-indicator {
+    border-color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .sidebar-access-info {
+        display: none;
+    }
+    
+    .sidebar-role-indicator {
+        margin: 0.25rem 0.5rem;
+        padding: 0.5rem;
+        font-size: 0.7rem;
+    }
 }
 
 /* Animation for sidebar items */
