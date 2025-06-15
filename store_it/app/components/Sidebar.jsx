@@ -84,12 +84,6 @@ const Sidebar = ({ isCollapsed }) => {
             to: '/Transaction',
             isActive: pathname === '/Transaction'
         },
-        { 
-            icon: <FaChartBar />, 
-            label: 'Reports', 
-            to: '/CompanyReport',
-            isActive: pathname === '/CompanyReport'
-        }
     ];
 
     // Admin menu items (full access to everything)
@@ -113,12 +107,6 @@ const Sidebar = ({ isCollapsed }) => {
             hasSubmenu: false, 
             to: '/Transaction',
             isActive: pathname === '/Transaction'
-        },
-        { 
-            icon: <FaChartBar />, 
-            label: 'Reports', 
-            to: '/CompanyReport',
-            isActive: pathname === '/CompanyReport'
         },
         { 
             icon: <FaUsers />, 
@@ -229,7 +217,6 @@ const Sidebar = ({ isCollapsed }) => {
                                 <li>✅ Full System Access</li>
                                 <li>✅ All Management Tools</li>
                                 <li>✅ User Administration</li>
-                                <li>✅ System Reports</li>
                             </ul>
                         )}
                     </div>

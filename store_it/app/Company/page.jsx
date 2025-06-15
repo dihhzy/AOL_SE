@@ -4,9 +4,9 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { userAtom } from '../lib/userAtom';
+import { userAtom } from "../lib/userAtom";
 import { useRouter } from "next/navigation";
-import './CompanyPage.css';
+import "./CompanyPage.css";
 import "../global.css";
 
 function CompanyPage() {
@@ -19,7 +19,7 @@ function CompanyPage() {
 
   // Calculate statistics
   const totalCompanies = companies.length;
-  const recentCompanies = companies.filter(company => {
+  const recentCompanies = companies.filter((company) => {
     const createdDate = new Date(company.CreatedAt);
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -33,10 +33,14 @@ function CompanyPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/companies?ownerId=${sessionUser.UserID}`);
+        const response = await fetch(
+          `/api/companies?ownerId=${sessionUser.UserID}`
+        );
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+          throw new Error(
+            errorData.message || `HTTP error! status: ${response.status}`
+          );
         }
         const data = await response.json();
         setCompanies(data);
@@ -52,36 +56,34 @@ function CompanyPage() {
   }, [sessionUser]);
 
   // Tambahkan state baru di atas
-const [showAddModal, setShowAddModal] = useState(false);
-const [newCompany, setNewCompany] = useState({
-  CompanyName: '',
-  Email: '',
-  Password: '',
-});
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newCompany, setNewCompany] = useState({
+    CompanyName: "",
+    Email: "",
+    Password: "",
+  });
 
-// Tambahkan fungsi ini di bawah handleDelete
-const handleAddCompany = async () => {
-  try {
-    const payload = {
-      ...newCompany,
-      OwnerUserID: sessionUser.UserID
-    };
-    const res = await fetch('/api/addcompanies', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error('Failed to add company');
-    const added = await res.json();
-    setCompanies(prev => [...prev, added]);
-    setShowAddModal(false);
-    setNewCompany({ CompanyName: '', Email: '', Password: '' });
-  } catch (err) {
-    alert('Error adding company: ' + err.message);
-  }
-};
-
-
+  // Tambahkan fungsi ini di bawah handleDelete
+  const handleAddCompany = async () => {
+    try {
+      const payload = {
+        ...newCompany,
+        OwnerUserID: sessionUser.UserID,
+      };
+      const res = await fetch("/api/addcompanies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to add company");
+      const added = await res.json();
+      setCompanies((prev) => [...prev, added]);
+      setShowAddModal(false);
+      setNewCompany({ CompanyName: "", Email: "", Password: "" });
+    } catch (err) {
+      alert("Error adding company: " + err.message);
+    }
+  };
 
   const handleDeleteCompany = async (companyId, companyName) => {
     // Show confirmation dialog
@@ -92,28 +94,29 @@ const handleAddCompany = async () => {
     if (!isConfirmed) return;
 
     setDeletingCompanyId(companyId);
-    
+
     try {
       const response = await fetch(`/api/companies/${companyId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
       }
 
       // Remove the company from the local state
-      setCompanies(prevCompanies => 
-        prevCompanies.filter(company => company.CompanyID !== companyId)
+      setCompanies((prevCompanies) =>
+        prevCompanies.filter((company) => company.CompanyID !== companyId)
       );
 
       // Show success message
       alert(`Company "${companyName}" has been successfully deleted.`);
-
     } catch (err) {
       console.error("Failed to delete company:", err);
       alert(`Error deleting company: ${err.message}`);
@@ -123,10 +126,10 @@ const handleAddCompany = async () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -134,9 +137,9 @@ const handleAddCompany = async () => {
     const now = new Date();
     const created = new Date(dateString);
     const diffInDays = Math.floor((now - created) / (1000 * 60 * 60 * 24));
-    
-    if (diffInDays === 0) return 'Today';
-    if (diffInDays === 1) return '1 day ago';
+
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "1 day ago";
     if (diffInDays < 30) return `${diffInDays} days ago`;
     if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
     return `${Math.floor(diffInDays / 365)} years ago`;
@@ -149,12 +152,16 @@ const handleAddCompany = async () => {
         <Sidebar />
         <div className="page-content company-page-content">
           <div className="company-header">
-  <h2>Your Companies <button className="add-product-button" onClick={() => setShowAddModal(true)}>+ Add Company</button> </h2>
-  
-
- 
-</div>
-
+            <h2>
+              Your Companies{" "}
+              <button
+                className="add-product-button"
+                onClick={() => setShowAddModal(true)}
+              >
+                + Add Company
+              </button>{" "}
+            </h2>
+          </div>
 
           {/* Company Statistics */}
           {!isLoading && !error && companies.length > 0 && (
@@ -165,53 +172,76 @@ const handleAddCompany = async () => {
               </div>
               <div className="stat-card">
                 <h3>Recent (30 days)</h3>
-                <p className="stat-value" style={{color: '#10b981'}}>{recentCompanies}</p>
+                <p className="stat-value" style={{ color: "#10b981" }}>
+                  {recentCompanies}
+                </p>
               </div>
               <div className="stat-card">
                 <h3>Active Status</h3>
-                <p className="stat-value" style={{color: '#38bdf8'}}>All Active</p>
+                <p className="stat-value" style={{ color: "#38bdf8" }}>
+                  All Active
+                </p>
               </div>
             </div>
           )}
 
           {error && <p className="error-message">Error: {error}</p>}
           {showAddModal && (
-  <div className="modal-overlay">
-    <div className="confirm-modal">
-      <h3>Add Company</h3>
-      <input
-        type="text"
-        placeholder="Company Name"
-        value={newCompany.CompanyName}
-        onChange={e => setNewCompany({ ...newCompany, CompanyName: e.target.value })}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={newCompany.Email}
-        onChange={e => setNewCompany({ ...newCompany, Email: e.target.value })}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={newCompany.Password}
-        onChange={e => setNewCompany({ ...newCompany, Password: e.target.value })}
-      />
-      <div className="modal-actions">
-        <button onClick={() => setShowAddModal(false)} className="cancel-btn">Cancel</button>
-        <button onClick={handleAddCompany} className="add-confirm-btn">Add</button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="modal-overlay">
+              <div className="confirm-modal">
+                <h3>Add Company</h3>
+                <input
+                  type="text"
+                  placeholder="Company Name"
+                  value={newCompany.CompanyName}
+                  onChange={(e) =>
+                    setNewCompany({
+                      ...newCompany,
+                      CompanyName: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={newCompany.Email}
+                  onChange={(e) =>
+                    setNewCompany({ ...newCompany, Email: e.target.value })
+                  }
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={newCompany.Password}
+                  onChange={(e) =>
+                    setNewCompany({ ...newCompany, Password: e.target.value })
+                  }
+                />
+                <div className="modal-actions">
+                  <button
+                    onClick={() => setShowAddModal(false)}
+                    className="cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddCompany}
+                    className="add-confirm-btn"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {isLoading ? (
             <p className="loading-message">Loading companies...</p>
           ) : companies.length > 0 ? (
             <div className="company-list-display">
-              {companies.map(company => (
+              {companies.map((company) => (
                 <div key={company.CompanyID} className="company-item-card">
                   <h4>{company.CompanyName}</h4>
-                  
+
                   <div className="company-info">
                     <div className="info-item">
                       <span className="info-icon">📧</span>
@@ -220,28 +250,32 @@ const handleAddCompany = async () => {
                         <div className="info-value">{company.Email}</div>
                       </div>
                     </div>
-                    
+
                     <div className="info-item">
                       <span className="info-icon">📅</span>
                       <div className="info-content">
                         <div className="info-label">Created</div>
-                        <div className="info-value">{formatDate(company.CreatedAt)}</div>
+                        <div className="info-value">
+                          {formatDate(company.CreatedAt)}
+                        </div>
                       </div>
                     </div>
-                    
+
                     <div className="info-item">
                       <span className="info-icon">⏰</span>
                       <div className="info-content">
                         <div className="info-label">Time Since</div>
-                        <div className="info-value">{getTimeAgo(company.CreatedAt)}</div>
+                        <div className="info-value">
+                          {getTimeAgo(company.CreatedAt)}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="company-actions">
-                    <button 
+                    <button
                       className="action-button primary"
-                      onClick={() => router.push('/Product')}
+                      onClick={() => router.push("/Product")}
                     >
                       <span>📦</span>
                       View Products
@@ -257,16 +291,27 @@ const handleAddCompany = async () => {
                       <span>✏️</span>
                       Edit
                     </button> */}
-                    <button 
-                      className={`action-button danger ${deletingCompanyId === company.CompanyID ? 'deleting' : ''}`}
+                    <button
+                      className={`action-button danger ${
+                        deletingCompanyId === company.CompanyID
+                          ? "deleting"
+                          : ""
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteCompany(company.CompanyID, company.CompanyName);
+                        handleDeleteCompany(
+                          company.CompanyID,
+                          company.CompanyName
+                        );
                       }}
                       disabled={deletingCompanyId === company.CompanyID}
                     >
-                      <span>{deletingCompanyId === company.CompanyID ? '⏳' : '🗑️'}</span>
-                      {deletingCompanyId === company.CompanyID ? 'Deleting...' : 'Delete'}
+                      <span>
+                        {deletingCompanyId === company.CompanyID ? "⏳" : "🗑️"}
+                      </span>
+                      {deletingCompanyId === company.CompanyID
+                        ? "Deleting..."
+                        : "Delete"}
                     </button>
                   </div>
                 </div>
@@ -275,13 +320,7 @@ const handleAddCompany = async () => {
           ) : (
             <p className="no-companies-message">No companies to display.</p>
           )}
-
-          
-
-          
         </div>
-
-        
       </div>
     </div>
   );
