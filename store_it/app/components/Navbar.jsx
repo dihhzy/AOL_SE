@@ -14,12 +14,11 @@ const Navbar = () => {
     const [user] = useAtom(userAtom);
     const setUser = useSetAtom(userAtom);
     const [searchTerm, setSearchTerm] = useState('');
-    const [hasNotifications, setHasNotifications] = useState(true); // Demo state
+    const [hasNotifications, setHasNotifications] = useState(true);
 
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchTerm.trim()) {
-            // Implement search functionality
             console.log('Searching for:', searchTerm);
         }
     };

@@ -2,7 +2,8 @@ import { db } from "../../lib/db";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const ownerId = searchParams.get("ownerId");
+  // const ownerId = searchParams.get("ownerId");
+  const ownerId = 7;
 
   if (!ownerId) {
     return new Response(JSON.stringify({ message: "Missing ownerId" }), { status: 400 });

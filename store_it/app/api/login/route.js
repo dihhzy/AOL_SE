@@ -25,7 +25,7 @@ export async function POST(request) {
     if (rows.length > 0) {
       const user = rows[0];
 
-      const cookieStore = await cookies(); // ✅ tambahkan await
+      const cookieStore = await cookies();
       console.log(cookieStore)
       cookieStore.set('session_user', JSON.stringify({
         id: user.UserID,

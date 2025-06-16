@@ -21,7 +21,6 @@ function ShowAllUsers() {
     search: ''
   });
 
-  // New user form state
   const [newUser, setNewUser] = useState({
     Username: '',
     Email: '',
@@ -58,14 +57,12 @@ function ShowAllUsers() {
   const filterUsers = () => {
     let filtered = [...users];
 
-    // Filter by role
     if (filters.role !== 'all') {
       filtered = filtered.filter(user => 
         user.Role.toLowerCase() === filters.role.toLowerCase()
       );
     }
 
-    // Filter by search term
     if (filters.search) {
       filtered = filtered.filter(user =>
         user.Username.toLowerCase().includes(filters.search.toLowerCase()) ||

@@ -1,4 +1,4 @@
-import { db } from '../../lib/db'; // Adjust path if your db utility is elsewhere
+import { db } from '../../lib/db';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {

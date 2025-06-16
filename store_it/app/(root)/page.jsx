@@ -1,9 +1,7 @@
-// app/page.
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import './LandingPage.css';
 
-// Placeholder for icons
 const IconPlaceholder = ({ className = "icon-placeholder-default" }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
@@ -32,7 +30,7 @@ export default function LandingPage() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => ({ ...prev, [entry.target.id]: true }));
-            // entry.target.classList.add('is-visible'); // Alternative: directly add class
+
             observer.unobserve(entry.target);
           }
         });
@@ -166,7 +164,7 @@ export default function LandingPage() {
     const [chartData, setChartData] = useState(initialData.map(d => ({ ...d, displayValue: 0 })));
 
     useEffect(() => {
-      const section = document.getElementById('showcase-chart-container'); // Target a more specific element if needed
+      const section = document.getElementById('showcase-chart-container');
       if (!section) return;
 
       const observer = new IntersectionObserver(

@@ -17,7 +17,6 @@ function CompanyPage() {
   const [sessionUser] = useAtom(userAtom);
   const router = useRouter();
 
-  // Calculate statistics
   const totalCompanies = companies.length;
   const recentCompanies = companies.filter((company) => {
     const createdDate = new Date(company.CreatedAt);
@@ -55,7 +54,6 @@ function CompanyPage() {
     fetchCompanies();
   }, [sessionUser]);
 
-  // Tambahkan state baru di atas
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCompany, setNewCompany] = useState({
     CompanyName: "",
@@ -63,7 +61,6 @@ function CompanyPage() {
     Password: "",
   });
 
-  // Tambahkan fungsi ini di bawah handleDelete
   const handleAddCompany = async () => {
     try {
       const payload = {
@@ -86,7 +83,6 @@ function CompanyPage() {
   };
 
   const handleDeleteCompany = async (companyId, companyName) => {
-    // Show confirmation dialog
     const isConfirmed = window.confirm(
       `Are you sure you want to delete "${companyName}"?\n\nThis action cannot be undone and will remove all associated data.`
     );
@@ -110,12 +106,10 @@ function CompanyPage() {
         );
       }
 
-      // Remove the company from the local state
       setCompanies((prevCompanies) =>
         prevCompanies.filter((company) => company.CompanyID !== companyId)
       );
 
-      // Show success message
       alert(`Company "${companyName}" has been successfully deleted.`);
     } catch (err) {
       console.error("Failed to delete company:", err);

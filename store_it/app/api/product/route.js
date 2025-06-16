@@ -1,10 +1,10 @@
-import { db } from '../../lib/db'; // Adjust path if your db utility is elsewhere
+import { db } from '../../lib/db';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const [rows] = await db.query(
-      'SELECT ProductID as id, ProductName as name, Quantity as quantity, Description as description, CategoryID, CompanyID, CreatedByUserID, CreatedAt FROM products'
+      'SELECT ProductID as id, ProductName as name, Quantity as quantity, Description as description, CategoryID as categoryId, CompanyID, CreatedByUserID, CreatedAt FROM products'
     );
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
@@ -14,9 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-
   try {
-
     const productData = await request.json();
     const { name: productName, quantity, description, categoryId, createdByUserId } = productData;
 
@@ -24,12 +22,23 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Missing required product fields (name, quantity) or invalid quantity.' }, { status: 400 });
     }
 
+    if (categoryId) {
+      const [categoryCheck] = await db.query(
+        'SELECT CategoryID FROM categories WHERE CategoryID = ?',
+        [categoryId]
+      );
+      
+      if (categoryCheck.length === 0) {
+        return NextResponse.json({ message: 'Invalid category selected' }, { status: 400 });
+      }
+    }
+
     const companyId = productData.companyId || 1; 
     const finalCategoryId = categoryId || null; 
-    const finalCreatedByUserId = createdByUserId || 2; // MANUAL DISINI COMPANY SAMA USER
+    const finalCreatedByUserId = createdByUserId || 2;
     const productQuantity = parseInt(quantity);
 
-    const productQuery = `
+    const productQuery = ` 
       INSERT INTO products 
         (ProductName, Quantity, Description, CompanyID, CategoryID, CreatedByUserID, CreatedAt) 
       VALUES (?, ?, ?, ?, ?, ?, NOW())
@@ -51,20 +60,20 @@ export async function POST(request) {
       VALUES (?, ?, NOW(), ?, ?)
     `;
     await db.execute(transactionQuery, [
-      productQuantity,          // QuantityChange
-      'Incoming',          // TransactionType
-      insertedProductId,        // ProductID
-      finalCreatedByUserId      // UserID
+      productQuantity,
+      'Incoming',
+      insertedProductId,
+      finalCreatedByUserId
     ]);
 
-
+  
     const [newProductRows] = await db.query(
-      'SELECT ProductID as id, ProductName as name, Quantity as quantity, Description as description, CategoryID, CompanyID, CreatedByUserID, CreatedAt FROM products WHERE ProductID = ?', 
+      'SELECT ProductID as id, ProductName as name, Quantity as quantity, Description as description, CategoryID as categoryId, CompanyID, CreatedByUserID, CreatedAt FROM products WHERE ProductID = ?', 
       [insertedProductId]
     );
 
     if (newProductRows.length === 0) {
-        return NextResponse.json({ message: 'Product created, but failed to retrieve it.' }, { status: 201 });
+      return NextResponse.json({ message: 'Product created, but failed to retrieve it.' }, { status: 201 });
     }
 
     return NextResponse.json(newProductRows[0], { status: 201 });
@@ -72,6 +81,5 @@ export async function POST(request) {
   } catch (error) {
     console.error('Failed to add product or record transaction:', error);
     return NextResponse.json({ message: 'Failed to add product or record transaction', error: error.message }, { status: 500 });
-  } finally {
   }
 }

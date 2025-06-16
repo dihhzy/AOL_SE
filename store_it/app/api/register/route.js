@@ -3,10 +3,8 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    // Parse the request body
     const { username, email, password } = await request.json();
     
-    // Validate input
     if (!username || !email || !password) {
       return NextResponse.json(
         { message: 'Username, email, and password are required' }, 
@@ -14,7 +12,6 @@ export async function POST(request) {
       );
     }
 
-    // Connect to the database
     const conn = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
@@ -22,7 +19,6 @@ export async function POST(request) {
       database: 'store_it'
     });
 
-    // Check if user already exists
     const [existingUsers] = await conn.execute(
       'SELECT * FROM users WHERE Email = ?', 
       [email]
@@ -35,13 +31,10 @@ export async function POST(request) {
       );
     }
 
-    // Insert new user
-    // Adjust table name and columns according to your actual database schema
     await conn.execute(
       'INSERT INTO users (Username, Email, Password, Role, CompanyID, CreatedAt) VALUES (?, ?, ?, ?, ?, NOW())',
       [username, email, password, 'Staff', 1]
     );
-    // fix database, aneh buat input
 
     await conn.end();
     

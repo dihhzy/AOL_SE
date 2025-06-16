@@ -1,5 +1,3 @@
-// components/HomeContent.jsx
-import React from 'react';
 import './HomeContent.css';
 
 const steps = [

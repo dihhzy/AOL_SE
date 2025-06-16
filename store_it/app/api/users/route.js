@@ -19,7 +19,6 @@ export async function POST(request) {
     const body = await request.json();
     const { Username, Email, Password, Role } = body;
 
-    // Validation
     if (!Username || !Email || !Password || !Role) {
       return new Response(JSON.stringify({ 
         message: 'All fields are required: Username, Email, Password, Role' 
@@ -29,7 +28,6 @@ export async function POST(request) {
       });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(Email)) {
       return new Response(JSON.stringify({ 
@@ -40,7 +38,6 @@ export async function POST(request) {
       });
     }
 
-    // Validate role
     const validRoles = ['admin', 'company_owner', 'staff'];
     if (!validRoles.includes(Role.toLowerCase())) {
       return new Response(JSON.stringify({ 
@@ -51,7 +48,6 @@ export async function POST(request) {
       });
     }
 
-    // Check if username already exists
     const [existingUserByUsername] = await db.query(
       'SELECT UserID FROM users WHERE Username = ?',
       [Username]
@@ -66,7 +62,6 @@ export async function POST(request) {
       });
     }
 
-    // Check if email already exists
     const [existingUserByEmail] = await db.query(
       'SELECT UserID FROM users WHERE Email = ?',
       [Email]
@@ -81,17 +76,14 @@ export async function POST(request) {
       });
     }
 
-    // Hash password
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(Password, saltRounds);
 
-    // Insert new user
     const [result] = await db.query(
       'INSERT INTO users (Username, Email, Password, Role, CreatedAt) VALUES (?, ?, ?, ?, NOW())',
       [Username, Email, hashedPassword, Role]
     );
 
-    // Get the created user (without password)
     const [newUser] = await db.query(
       'SELECT UserID, Username, Email, Role, CreatedAt FROM users WHERE UserID = ?',
       [result.insertId]
@@ -108,7 +100,7 @@ export async function POST(request) {
   } catch (err) {
     console.error('Error creating user:', err);
     
-    // Handle specific database errors
+
     if (err.code === 'ER_DUP_ENTRY') {
       return new Response(JSON.stringify({ 
         message: 'Username or email already exists' 

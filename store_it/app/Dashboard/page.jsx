@@ -25,25 +25,20 @@ function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch dashboard data
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
-        // Fetch products count
         const productsRes = await fetch('/api/product');
         const products = await productsRes.json();
         
-        // Fetch companies count
         const companiesRes = await fetch(`/api/companies?ownerId=${user?.UserID}`);
         const companies = companiesRes.ok ? await companiesRes.json() : [];
         
-        // Fetch transactions count (if API exists)
         let transactionCount = 0;
         try {
           const transactionsRes = await fetch(`/api/transactions?userId=${user?.UserID}`);
           if (transactionsRes.ok) {
             const transactions = await transactionsRes.json();
-            // Count recent transactions (last 7 days)
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
             transactionCount = transactions.filter(t => 
@@ -54,7 +49,6 @@ function Dashboard() {
           console.log('Transactions API not available');
         }
         
-        // Calculate metrics
         const totalProducts = products.length;
         const lowStockProducts = products.filter(p => p.quantity < 10);
         

@@ -12,7 +12,6 @@ function Transaction() {
   const [error, setError] = useState(null);
   const targetUserId = 2;
 
-  // Calculate statistics
   const totalTransactions = transactions.length;
   const totalRestock = transactions.filter(t => t.TransactionType === 'restock').length;
   const totalSales = transactions.filter(t => t.TransactionType === 'sale').length;

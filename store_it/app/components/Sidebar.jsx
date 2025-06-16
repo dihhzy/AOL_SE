@@ -33,14 +33,12 @@ const Sidebar = ({ isCollapsed }) => {
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
-        // Add a small delay for better UX
         setTimeout(() => {
             setUser(null);
             router.push('/Login');
         }, 500);
     };
 
-    // Base menu items - accessible to all roles
     const baseMenuItems = [
         { 
             icon: <FaHome />, 
@@ -51,7 +49,7 @@ const Sidebar = ({ isCollapsed }) => {
         }
     ];
 
-    // Staff-only menu items (can only manage products)
+    // Staff
     const staffMenuItems = [
         { 
             icon: <FaPlusSquare />, 
@@ -62,7 +60,7 @@ const Sidebar = ({ isCollapsed }) => {
         }
     ];
 
-    // Company Owner menu items (can manage companies, products, and transactions)
+    // Company Owner
     const companyOwnerMenuItems = [
         { 
             icon: <FaBuilding />, 
@@ -86,7 +84,7 @@ const Sidebar = ({ isCollapsed }) => {
         },
     ];
 
-    // Admin menu items (full access to everything)
+    // Admin
     const adminMenuItems = [
         { 
             icon: <FaBuilding />, 
@@ -117,7 +115,6 @@ const Sidebar = ({ isCollapsed }) => {
         }
     ];
 
-    // Determine menu items based on user role
     let menuItems = [...baseMenuItems];
     
     if (user?.Role === 'Admin') {

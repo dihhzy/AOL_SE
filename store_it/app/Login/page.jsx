@@ -24,8 +24,8 @@ const LoginPage = () => {
     const data = await res.json();
 
     if (res.ok) {
-      setUser(data.user); // ✅ simpan user ke Jotai
-      router.push("/Dashboard"); // ✅ redirect ke Dashboard
+      setUser(data.user); // simpan user ke Jotai
+      router.push("/Dashboard"); // redirect ke Dashboard
     } else {
       alert(data.message);
     }
